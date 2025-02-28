@@ -134,7 +134,7 @@ function getCoordinates(e) {
 document.getElementById('generateBtn').addEventListener('click', async () => {
     const imageData = canvas.toDataURL('image/png'); // 获取画布图像
     try {
-        const response = await fetch('https://<你的Fly.io服务URL>/generate', {
+        const response = await fetch('https://your-app-name.fly.dev/generate', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -153,6 +153,6 @@ document.getElementById('generateBtn').addEventListener('click', async () => {
         document.getElementById('resultContainer').appendChild(img);
     } catch (error) {
         console.error('Error:', error);
-        alert('生成失败，请检查API Key或网络连接');
+        alert('生成失败，请检查服务器是否正常运行');
     }
 }); 

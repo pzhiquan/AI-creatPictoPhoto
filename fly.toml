@@ -1,0 +1,4 @@
+app = "your-app-name"  # 替换为你的应用名称
+
+[build]
+  context = "src"  # 指定子目录为构建上下文 
