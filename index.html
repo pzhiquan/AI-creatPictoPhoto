@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI 美术助手</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Gochi+Hand&family=Patrick+Hand&display=swap');
+
+        body {
+            font-family: 'Patrick Hand', cursive;
+            background-color: #f9f3e9;
+            padding: 10px;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+            background-image: url('https://www.transparenttextures.com/patterns/notebook.png');
+            background-size: cover;
+        }
+
+        h1 {
+            color: #6b4f4f;
+            font-size: 2.8em;
+            text-shadow: 2px 2px 0px #fff;
+            text-align: center;
+            margin: 10px 0;
+            font-family: 'Gochi Hand', cursive;
+            position: relative;
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            height: 4px;
+            background-color: #ff8c94;
+            border-radius: 2px;
+        }
+
+        .main-container {
+            display: flex;
+            gap: 20px;
+            width: 100%;
+            max-width: 1600px;
+            height: calc(100vh - 80px);
+            margin-top: 10px;
+        }
+
+        .toolbar {
+            width: 280px;
+            background-color: #fff;
+            border: 3px solid #6b4f4f;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 5px 5px 0px rgba(107, 79, 79, 0.3);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background-image: linear-gradient(to bottom, #fff 0%, #f9f3e9 100%);
+        }
+
+        .canvas-container, .result-container {
+            background-color: #fff;
+            border: 3px solid #6b4f4f;
+            border-radius: 15px;
+            box-shadow: 5px 5px 0px rgba(107, 79, 79, 0.3);
+            padding: 10px;
+            background-image: linear-gradient(to bottom, #fff 0%, #f9f3e9 100%);
+        }
+
+        canvas {
+            border: 2px dashed #6b4f4f;
+            border-radius: 12px;
+            background-color: #fff;
+            touch-action: none;
+            width: 100%;
+            height: 100%;
+        }
+
+        .tool-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .tool-group label {
+            color: #6b4f4f;
+            font-size: 1em;
+            text-shadow: 1px 1px 0px #fff;
+        }
+
+        .tool-group input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 8px;
+            background: #f0e6d6;
+            border-radius: 5px;
+            border: 1px solid #6b4f4f;
+            outline: none;
+        }
+
+        .tool-group input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #ff8c94;
+            border: 2px solid #6b4f4f;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .tool-group input[type="color"] {
+            width: 100%;
+            height: 40px;
+            padding: 0;
+            border: 2px solid #6b4f4f;
+            border-radius: 8px;
+            cursor: pointer;
+            background-color: #f0e6d6;
+        }
+
+        #eraserBtn, #clearBtn, #generateBtn {
+            padding: 12px;
+            border: 2px solid #6b4f4f;
+            border-radius: 8px;
+            background-color: #ff8c94;
+            color: white;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1em;
+            transition: all 0.2s ease;
+            font-family: 'Patrick Hand', cursive;
+            text-shadow: 1px 1px 0px rgba(107, 79, 79, 0.3);
+            box-shadow: 3px 3px 0px rgba(107, 79, 79, 0.3);
+            white-space: nowrap;
+        }
+
+        #eraserBtn:hover, #clearBtn:hover, #generateBtn:hover {
+            background-color: #ff6b77;
+            transform: translateY(-2px);
+            box-shadow: 5px 5px 0px rgba(107, 79, 79, 0.3);
+        }
+
+        #eraserBtn:active, #clearBtn:active, #generateBtn:active {
+            transform: translateY(0);
+            box-shadow: 2px 2px 0px rgba(107, 79, 79, 0.3);
+        }
+
+        #resultContainer {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        #resultContainer img {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 10px;
+            border: 2px dashed #6b4f4f;
+        }
+
+        .placeholder-text {
+            color: #6b4f4f;
+            font-size: 1.2em;
+            text-align: center;
+            text-shadow: 1px 1px 0px #fff;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎨 在下面绘制你的作品 🎨</h1>
+    <div class="main-container">
+        <div class="toolbar">
+            <div class="tool-group">
+                <label for="brushSize">画笔大小:</label>
+                <input type="range" id="brushSize" min="1" max="20" value="2">
+            </div>
+            <div class="tool-group">
+                <label for="eraserSize">橡皮擦大小:</label>
+                <input type="range" id="eraserSize" min="1" max="20" value="10">
+            </div>
+            <div class="tool-group">
+                <label for="brushColor">画笔颜色:</label>
+                <input type="color" id="brushColor" value="#000000">
+            </div>
+            <button id="eraserBtn">橡皮擦</button>
+            <button id="clearBtn">清空画板</button>
+            <button id="generateBtn">✨ 生成更漂亮的图 ✨</button>
+        </div>
+        <div class="canvas-container">
+            <canvas id="drawingCanvas"></canvas>
+        </div>
+        <div class="result-container">
+            <div id="resultContainer">
+                <p class="placeholder-text">你的AI生成作品将显示在这里哦！</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 
