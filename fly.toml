@@ -1,4 +1,11 @@
 app = "your-app-name"  # 替换为你的应用名称
 
 [build]
-  context = "src"  # 指定子目录为构建上下文 
+  context = "src"  # 指定子目录为构建上下文
+
+[env]
+  FLY_MEMORY_MB = "512"  # 设置内存为 512MB
+
+[[services]]
+  internal_port = 5000  # 内部端口
+  protocol = "tcp"  # 协议 
